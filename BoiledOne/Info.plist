@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>InputMethodConnectionName</key>
+	<string>BoiledOne</string>
+	<key>InputMethodServerControllerClass</key>
+	<string>BoiledOneInputController</string>
+	<key>TISInputSourceId</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>TISIntendedLanguage</key>
+	<string>ja</string>
+	<key>tsInputMethodCharactoerRepertoireKey</key>
+	<array>
+		<string>Latn</string>
+		<string>Hiragana</string>
+	</array>
+	<key>tsInputMethodIconFileKey</key>
+	<string></string>
+</dict>
+</plist>
