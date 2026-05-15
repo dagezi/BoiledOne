@@ -1,8 +1,11 @@
 import Cocoa
 import InputMethodKit
+import OSLog
 
+let logger = Logger(subsystem: "BoiledOne", category: "Controller")
 @objc(BoiledOneInputController)
 class BoiledOneInputController: IMKInputController {
+    var context = BoiledOneContext()
 
     // ── State ──────────────────────────────────────────────────────────────
     private var composingBuffer = ""
@@ -16,43 +19,20 @@ class BoiledOneInputController: IMKInputController {
         guard let event = event,
               event.type == .keyDown else { return false }
 
-        let keyCode   = event.keyCode
-        let modifiers = event.modifierFlags
+        logger.info("Boiled: str \(self.context.inputString) keyCode: \(self.context.inputKeyCode)")
 
-        // Let through modifier-only combos (Cmd+C, etc.)
-        let significant: NSEvent.ModifierFlags = [.command, .control, .option]
-        if modifiers.intersection(significant) != [] {
+        guard let client = sender as? IMKTextInput else {
             return false
         }
 
-        // Return / Enter → commit whatever is in the buffer
-        if keyCode == 36 || keyCode == 76 {
-            commitComposition(sender)
+        context.inputClient = client
+        context.inputString = event.characters ?? ""
+        context.inputKeyCode = event.keyCode
+        context.inputModifier = event.modifierFlags
+
+        if (context.inputString == "!") {
             return true
         }
-
-        // Escape → cancel composition
-        if keyCode == 53 {
-            composingBuffer = ""
-            updateComposingText(sender)
-            return true
-        }
-
-        // Backspace → delete last character from buffer
-        if keyCode == 51 {
-            if composingBuffer.isEmpty { return false }   // let app handle it
-            composingBuffer.removeLast()
-            updateComposingText(sender)
-            return true
-        }
-
-        // Printable characters → append to buffer
-        if let chars = event.characters, !chars.isEmpty {
-            composingBuffer += chars
-            updateComposingText(sender)
-            return true
-        }
-
         return false
     }
 
@@ -60,9 +40,7 @@ class BoiledOneInputController: IMKInputController {
 
     /// Sends the current buffer to the client app as "marked text"
     /// (underlined, not yet committed). This is the preedit/composition string.
-    private func updateComposingText(_ sender: Any!) {
-        guard let client = sender as? IMKTextInput else { return }
-
+    private func updateComposingText(_ client: IMKTextInput) {
         if composingBuffer.isEmpty {
             // Clear the marked text region
             client.setMarkedText(
