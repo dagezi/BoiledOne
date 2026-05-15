@@ -10,7 +10,7 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>TISIntendedLanguage</key>
 	<string>ja</string>
-	<key>tsInputMethodCharactoerRepertoireKey</key>
+	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Latn</string>
 		<string>Hiragana</string>
