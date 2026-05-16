@@ -1,19 +1,14 @@
-//
-//  ContentView.swift
-//  BoiledOne
-//
-//  Created by Takeshi on 2024-10-05.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var testText: String = "You can test here!"
+
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            TextEditor(text: $testText)
         }
         .padding()
     }
