@@ -18,7 +18,7 @@ class BoiledOneContext {
 
     var inputString: String = ""
     var inputKeyCode: UInt16 = 0
-    var inputModifier: NSEvent.ModifierFlags = NSEvent.modifierFlags
+    var inputModifiers: NSEvent.ModifierFlags = NSEvent.modifierFlags
     var inputClient: IMKTextInput?
 
     func insertToClient(_ s: String) {

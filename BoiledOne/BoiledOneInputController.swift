@@ -6,14 +6,8 @@ let logger = Logger(subsystem: "BoiledOne", category: "Controller")
 @objc(BoiledOneInputController)
 class BoiledOneInputController: IMKInputController {
     var context = BoiledOneContext()
+    var commandMap: CommandMap = CommandMap()
 
-    // ── State ──────────────────────────────────────────────────────────────
-    private var composingBuffer = ""
-
-    // ── Key Input ──────────────────────────────────────────────────────────
-
-    /// Called for every keydown while your IME is active.
-    /// Return true if you handled the event; false to pass it through.
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
 
         guard let event = event,
@@ -28,68 +22,57 @@ class BoiledOneInputController: IMKInputController {
         context.inputClient = client
         context.inputString = event.characters ?? ""
         context.inputKeyCode = event.keyCode
-        context.inputModifier = event.modifierFlags
+        context.inputModifiers = event.modifierFlags
 
-        if (context.inputString == "!") {
-            return true
+        var result: BoiledOneCommandResult = .reExecute
+        var keyCode = context.inputKeyCode
+        var modifiers = context.inputModifiers
+        while (result == .reExecute) {
+            result = .notHandled
+            for entry in commandMap.map[context.mode]! {
+                if keyCode == entry.keyCode, modifiers.intersection(entry.mask) == entry.modifiers {
+                    logger.info("Command: \(entry.command.name) \(String(describing: modifiers))")
+                    result = entry.command.execute(context)
+                    context.prevCommand = entry.command
+                    break
+                }
+            }
+            if result == .notHandled {
+                let mayFallback: BoiledOneCommand? = commandMap.fallbackCommands[context.mode]
+                if let fallback = mayFallback {
+                    result = fallback.execute(context)
+                    context.prevCommand = fallback
+                }
+            }
         }
-        return false
-    }
+        context.inputClient = nil
 
-    // ── Composition Display ────────────────────────────────────────────────
-
-    /// Sends the current buffer to the client app as "marked text"
-    /// (underlined, not yet committed). This is the preedit/composition string.
-    private func updateComposingText(_ client: IMKTextInput) {
-        if composingBuffer.isEmpty {
-            // Clear the marked text region
+        switch (context.mode) {
+        case .none:
             client.setMarkedText(
                 "",
                 selectionRange: NSRange(location: 0, length: 0),
-                replacementRange: NSRange(location: NSNotFound, length: 0)
-            )
-        } else {
-            // Show composing buffer as underlined marked text
+                replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+
+        case .raw, .conv:
             let attrs = mark(
                 forStyle: kTSMHiliteSelectedConvertedText,
-                at: NSRange(location: 0, length: composingBuffer.utf16.count)
+                at: NSRange(location: 0, length: context.rawString.utf16.count)
             )
 
             let marked = NSAttributedString(
-                string: composingBuffer,
-                attributes: attrs as? [NSAttributedString.Key: Any]
+                string: context.rawString,
+                attributes: attrs as? [NSAttributedString.Key: Any],
             )
 
             client.setMarkedText(
                 marked,
-                selectionRange: NSRange(
-                    location: composingBuffer.utf16.count,
-                    length: 0
-                ),
-                replacementRange: NSRange(location: NSNotFound, length: 0)
+                selectionRange: NSRange(location: context.rawString.utf16.count, length: 0),
+                replacementRange: NSRange(location: NSNotFound, length: 0),
             )
         }
+        return result == .handled
     }
-
-    // ── Commit ─────────────────────────────────────────────────────────────
-
-    /// Called by IMK when composition should be finalized (focus change, etc.)
-    override func commitComposition(_ sender: Any!) {
-        guard !composingBuffer.isEmpty else { return }
-
-        guard let client = sender as? IMKTextInput else { return }
-
-        // This is where you'd run kana→kanji conversion.
-        // For Hello World, we just commit raw text.
-        client.insertText(
-            composingBuffer,
-            replacementRange: NSRange(location: NSNotFound, length: 0)
-        )
-
-        composingBuffer = ""
-    }
-
-    // ── Candidates (optional stub) ─────────────────────────────────────────
 
     override func candidates(_ sender: Any!) -> [Any]! {
         // Return an empty list; no candidate window for now.
