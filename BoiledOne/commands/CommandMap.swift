@@ -50,6 +50,10 @@ struct CommandMap {
             CommandEntry(kVK_Tab, [], FixAndPassThruCommand.inst),
             CommandEntry(kVK_Return, [], FixAndPassThruCommand.inst),
             CommandEntry(kVK_Space, [], FixAndPassThruCommand.inst),
+            CommandEntry(kVK_ANSI_J, [.control], StartConvertCommand.inst)
+        ],
+        .conv: [
+            CommandEntry(kVK_ANSI_L, [.control], FixCommand.inst),           
         ],
     ]
 

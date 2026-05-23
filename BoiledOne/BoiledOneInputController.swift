@@ -25,8 +25,8 @@ class BoiledOneInputController: IMKInputController {
         context.inputModifiers = event.modifierFlags
 
         var result: BoiledOneCommandResult = .reExecute
-        var keyCode = context.inputKeyCode
-        var modifiers = context.inputModifiers
+        let keyCode = context.inputKeyCode
+        let modifiers = context.inputModifiers
         while (result == .reExecute) {
             result = .notHandled
             for entry in commandMap.map[context.mode]! {
@@ -55,19 +55,20 @@ class BoiledOneInputController: IMKInputController {
                 replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
 
         case .raw, .conv:
+            let stringToShow = context.mode == .raw ? context.rawString : context.convedString
             let attrs = mark(
                 forStyle: kTSMHiliteSelectedConvertedText,
-                at: NSRange(location: 0, length: context.rawString.utf16.count)
+                at: NSRange(location: 0, length: stringToShow.utf16.count)
             )
 
             let marked = NSAttributedString(
-                string: context.rawString,
+                string: stringToShow,
                 attributes: attrs as? [NSAttributedString.Key: Any],
             )
 
             client.setMarkedText(
                 marked,
-                selectionRange: NSRange(location: context.rawString.utf16.count, length: 0),
+                selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
                 replacementRange: NSRange(location: NSNotFound, length: 0),
             )
         }

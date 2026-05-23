@@ -43,7 +43,7 @@ class FixCommand : BoiledOneCommand {
     var name: String = "FixCommand"
 
     func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
-        var conved = context.rawString
+        var conved = context.mode == .raw ? context.rawString : context.convedString
         context.insertToClient(conved)
         context.convedString = ""
         context.rawString = ""
