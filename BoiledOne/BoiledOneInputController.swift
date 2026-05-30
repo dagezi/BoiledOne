@@ -3,6 +3,7 @@ import InputMethodKit
 import OSLog
 
 let logger = Logger(subsystem: "BoiledOne", category: "Controller")
+
 @objc(BoiledOneInputController)
 class BoiledOneInputController: IMKInputController {
     var context = BoiledOneContext()
@@ -52,13 +53,14 @@ class BoiledOneInputController: IMKInputController {
             client.setMarkedText(
                 "",
                 selectionRange: NSRange(location: 0, length: 0),
-                replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+                replacementRange: .notFound,
+            )
 
-        case .raw, .conv:
-            let stringToShow = context.mode == .raw ? context.rawString : context.convedString
+        case .raw:
+            let stringToShow = context.rawString
             let attrs = mark(
                 forStyle: kTSMHiliteSelectedConvertedText,
-                at: NSRange(location: 0, length: stringToShow.utf16.count)
+                at: NSRange(location: 0, length: stringToShow.utf16.count),
             )
 
             let marked = NSAttributedString(
@@ -69,8 +71,31 @@ class BoiledOneInputController: IMKInputController {
             client.setMarkedText(
                 marked,
                 selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
-                replacementRange: NSRange(location: NSNotFound, length: 0),
+                replacementRange: .notFound,
             )
+        case .conv:
+            if let converter = context.simpleKanziConverter {
+                let converted = converter.getSelectedDest()
+                let unconverted = converter.getUnconverted()
+
+                let stringToShow: String = "\(converted)\(unconverted)"
+                let markedString = NSMutableAttributedString(string: stringToShow)
+
+                markedString.addAttributes(
+                    mark(forStyle: kTSMHiliteSelectedConvertedText, at: .notFound) as! [NSAttributedString.Key: Any],
+                    range: NSRange(location: 0, length: converted.utf16.count),
+                )
+                markedString.addAttributes(
+                    mark(forStyle: kTSMHiliteConvertedText, at: .notFound) as! [NSAttributedString.Key: Any],
+                    range: NSRange(location: converted.utf16.count, length: unconverted.utf16.count),
+                )
+
+                client.setMarkedText(
+                    markedString,
+                    selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
+                    replacementRange: NSRange(location: NSNotFound, length: 0),
+                )
+            }
         }
         return result == .handled
     }

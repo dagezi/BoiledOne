@@ -21,6 +21,9 @@ class BoiledOneContext {
     var inputModifiers: NSEvent.ModifierFlags = NSEvent.modifierFlags
     var inputClient: IMKTextInput?
 
+    // TODO: More extensible
+    var simpleKanziConverter: SimpleKanziConverter?
+
     func insertToClient(_ s: String) {
         if (inputClient == nil) {
             NSLog("insertToClient: client is nil")
