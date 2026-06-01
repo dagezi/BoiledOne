@@ -1,22 +1,17 @@
 import Foundation
 
-class RawInsertSelfCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = RawInsertSelfCommand()
-    var name = "InsertSelfCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let rawInsertSelfCommand = BoiledOneCommand(
+    name: "InsertSelfCommand",
+    handler: { context in
         context.rawString += context.inputString
         context.mode = .raw
         return .handled
     }
-}
+)
 
-class RawBackSpaceCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = RawBackSpaceCommand()
-
-    var name: String = "RawBackSpaceCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let rawBackSpaceCommand = BoiledOneCommand(
+    name: "RawBackSpaceCommand",
+    handler: { context in
         if !context.rawString.isEmpty {
             context.rawString.removeLast()
         }
@@ -25,24 +20,20 @@ class RawBackSpaceCommand : BoiledOneCommand {
         }
         return .handled
     }
-}
+)
 
-class NopCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = NopCommand()
-    var name = "NopCommand"
-
-    func execute(_: BoiledOneContext) -> BoiledOneCommandResult {
+let nopCommand = BoiledOneCommand(
+    name: "NopCommand",
+    handler: { context in
         // Nothing to do
         return .handled
     }
-}
+)
 
 // Works in .raw and .conv
-class FixCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = FixCommand()
-    var name: String = "FixCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let fixCommand = BoiledOneCommand(
+    name: "FixCommand",
+    handler: { context in
         var conved = context.mode == .raw ? context.rawString : context.convedString
         context.insertToClient(conved)
         context.convedString = ""
@@ -50,26 +41,23 @@ class FixCommand : BoiledOneCommand {
         context.mode = .none
         return .handled
     }
-}
+)
 
 // Works in .raw and .conv
-class FixAndExecuteCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = FixAndExecuteCommand()
-    var name: String = "FixAndExecuteCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
-        _ = FixCommand.inst.execute(context)
+let fixAndExecuteCommand = BoiledOneCommand(
+    name: "FixAndExecuteCommand",
+    handler: { context in
+        _ = fixCommand.execute(context)
         return .reExecute
     }
-}
+)
 
 // Note: It doesn't work for Ctrl+M. Why?
-class FixAndPassThruCommand : BoiledOneCommand {
-    static var inst: BoiledOneCommand = FixAndPassThruCommand()
-    var name: String = "FixAndPassThruCommand"
+let fixAndPassThruCommand = BoiledOneCommand(
+    name: "FixAndPassThruCommand",
 
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
-        _ = FixCommand.inst.execute(context)
+    handler: { context in
+        _ = fixCommand.execute(context)
         return .through
     }
-}
+)

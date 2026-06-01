@@ -42,9 +42,16 @@ enum BoiledOneCommandResult {
     case through      // Handled, but through event to client
 }
 
-protocol BoiledOneCommand {
-    static var inst: BoiledOneCommand { get }
-    var name: String { get }
-    func execute(_ : BoiledOneContext) -> BoiledOneCommandResult
-}
+class BoiledOneCommand {
+    let name: String
+    let handler: (_ : BoiledOneContext) -> BoiledOneCommandResult
 
+    init(name: String, handler: @escaping (_ : BoiledOneContext) -> BoiledOneCommandResult) {
+        self.name = name
+        self.handler = handler
+    }
+    
+    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+        return handler(context)
+    }
+}

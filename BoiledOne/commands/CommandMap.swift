@@ -44,34 +44,34 @@ struct CommandMap {
         .none : [
         ],
         .raw: [
-            CommandEntry(kVK_ANSI_H, [.control] , RawBackSpaceCommand.inst),
-            CommandEntry(kVK_ANSI_L, [.control], FixCommand.inst),
-            CommandEntry(kVK_ANSI_M, [.control], FixAndPassThruCommand.inst),
-            CommandEntry(kVK_Tab, [], FixAndPassThruCommand.inst),
-            CommandEntry(kVK_Return, [], FixAndPassThruCommand.inst),
-            CommandEntry(kVK_Space, [], FixAndPassThruCommand.inst),
-            CommandEntry(kVK_ANSI_J, [.control], SimpleKanziStartCommand.inst),
+            CommandEntry(kVK_ANSI_H, [.control] , rawBackSpaceCommand),
+            CommandEntry(kVK_ANSI_L, [.control], fixCommand),
+            CommandEntry(kVK_ANSI_M, [.control], fixAndPassThruCommand),
+            CommandEntry(kVK_Tab, [], fixAndPassThruCommand),
+            CommandEntry(kVK_Return, [], fixAndPassThruCommand),
+            CommandEntry(kVK_Space, [], fixAndPassThruCommand),
+            CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
         ],
         .conv: [
-            CommandEntry(kVK_ANSI_L, [.control], SimpleKanziFixOneCommand.inst),  
-            CommandEntry(kVK_ANSI_N, [.control], SimpleKanziSelectNextCommand.inst),
-            CommandEntry(kVK_ANSI_P, [.control], SimpleKanziSelectPrevCommand.inst),
+            CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixOneCommand),  
+            CommandEntry(kVK_ANSI_N, [.control], simpleKanziSelectNextCommand),
+            CommandEntry(kVK_ANSI_P, [.control], simpleKanziSelectPrevCommand),
         ],
     ]
 
     var fallbackCommands: [BoiledOneInputMode : BoiledOneCommand] = [
-        .raw : NopCommand.inst,
-        .conv : NopCommand.inst,
+        .raw : nopCommand,
+        .conv : nopCommand,
     ]
 
     init() {
         for keyCode in selfInsertKeys {
             map[.none]?.append(
-                CommandEntry(keyCode, [], RawInsertSelfCommand.inst))
+                CommandEntry(keyCode, [], rawInsertSelfCommand))
             map[.raw]?.append(
-                CommandEntry(keyCode, [], RawInsertSelfCommand.inst))
+                CommandEntry(keyCode, [], rawInsertSelfCommand))
             map[.conv]?.append(
-                CommandEntry(keyCode, [], FixAndExecuteCommand.inst))
+                CommandEntry(keyCode, [], fixAndExecuteCommand))
         }
     }
 }

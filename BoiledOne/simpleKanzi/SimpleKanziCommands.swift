@@ -1,10 +1,8 @@
 private var dictionary = SimpleDictionary()
 
-class SimpleKanziStartCommand : BoiledOneCommand {
-    static let inst: BoiledOneCommand = SimpleKanziStartCommand()
-    var name = "SimpleKanziStartCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let simpleKanziStartCommand = BoiledOneCommand(
+    name: "SimpleKanziStartCommand",
+    handler: {context in
         assert(context.mode == .raw)
         let hira =
             context.romanConverter.convert(source: context.rawString)
@@ -13,14 +11,11 @@ class SimpleKanziStartCommand : BoiledOneCommand {
         context.simpleKanziConverter = converter
         
         return .handled
-    }
-}
-
-class SimpleKanziFixOneCommand: BoiledOneCommand {
-    static let inst: BoiledOneCommand = SimpleKanziFixOneCommand()
-    var name = "SimpleKanziFixOneCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+    },
+)
+let simpleKanziFixOneCommand = BoiledOneCommand(
+    name: "SimpleKanziFixOneCommand",
+    handler: {context in
         assert(context.mode == .conv)
         guard let converter = context.simpleKanziConverter else {
             return .handled
@@ -34,13 +29,11 @@ class SimpleKanziFixOneCommand: BoiledOneCommand {
         }
         return .handled
     }
-}
+)
 
-class SimpleKanziSelectNextCommand: BoiledOneCommand {
-    static let inst: BoiledOneCommand = SimpleKanziSelectNextCommand()
-    var name = "SimpleKanziSelectNextCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let simpleKanziSelectNextCommand = BoiledOneCommand(
+    name: "SimpleKanziSelectNextCommand",
+    handler: {context in
         assert(context.mode == .conv)
         guard let converter = context.simpleKanziConverter else {
             return .handled
@@ -48,13 +41,11 @@ class SimpleKanziSelectNextCommand: BoiledOneCommand {
         converter.selectRelatively(diff: 1)
         return .handled
     }
-}
+)
 
-class SimpleKanziSelectPrevCommand: BoiledOneCommand {
-    static let inst: BoiledOneCommand = SimpleKanziSelectPrevCommand()
-    var name = "SimpleKanziSelectPrevCommand"
-
-    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+let simpleKanziSelectPrevCommand = BoiledOneCommand(
+    name: "SimpleKanziSelectPrevCommand",
+    handler: {context in
         assert(context.mode == .conv)
         guard let converter = context.simpleKanziConverter else {
             return .handled
@@ -62,4 +53,4 @@ class SimpleKanziSelectPrevCommand: BoiledOneCommand {
         converter.selectRelatively(diff: -1)
         return .handled
     }
-}
+)
