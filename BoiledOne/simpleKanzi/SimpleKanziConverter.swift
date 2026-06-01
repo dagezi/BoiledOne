@@ -8,19 +8,6 @@ struct SimpleDictionaryEntry {
     // TODO: Add frequency 
 }
 
-class SimpleDictionary {
-    var entries: [SimpleDictionaryEntry] = []
-
-    func add(source: String, dest: String) {
-        // TODO: Sorted by reverse dictionary order
-        entries.append(SimpleDictionaryEntry(source: source, dest: dest))
-    }
-
-    init() {
-        add(source: "わたし", dest: "私")
-    }    
-}
-
 class SimpleKanziConverter {
     let original: String   // Source Hiragana String
     var source: Substring

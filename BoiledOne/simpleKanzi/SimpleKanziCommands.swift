@@ -1,3 +1,5 @@
+private var dictionary = SimpleDictionary()
+
 class SimpleKanziStartCommand : BoiledOneCommand {
     static let inst: BoiledOneCommand = SimpleKanziStartCommand()
     var name = "SimpleKanziStartCommand"
@@ -6,7 +8,7 @@ class SimpleKanziStartCommand : BoiledOneCommand {
         assert(context.mode == .raw)
         let hira =
             context.romanConverter.convert(source: context.rawString)
-        let converter = SimpleKanziConverter(SimpleDictionary(), hira)
+        let converter = SimpleKanziConverter(dictionary, hira)
         context.mode = .conv
         context.simpleKanziConverter = converter
         
