@@ -31,6 +31,22 @@ let simpleKanziFixOneCommand = BoiledOneCommand(
     }
 )
 
+let simpleKanziFixAllCommand = BoiledOneCommand(
+    name: "SimpleKanziFixAllCommand",
+    handler: {context in
+        assert(context.mode == .conv)
+        guard let converter = context.simpleKanziConverter else {
+            return .handled
+        }
+        context.insertToClient("\(converter.getSelectedDest())\(converter.getUnconverted())")
+        converter.fixAll()
+        context.mode = .raw
+        context.simpleKanziConverter = .none
+        context.rawString = ""
+        return .handled
+    }
+)
+
 let simpleKanziSelectNextCommand = BoiledOneCommand(
     name: "SimpleKanziSelectNextCommand",
     handler: {context in

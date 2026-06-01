@@ -57,6 +57,11 @@ class SimpleKanziConverter {
         updateCandidates()
     }
 
+    func fixAll() {
+        source = source[source.endIndex...]
+        updateCandidates()
+    }
+
     func selectRelatively(diff: Int) {
         candidateIndex = (candidateIndex + diff).modulo(candidates.count)
     }
@@ -65,4 +70,3 @@ class SimpleKanziConverter {
         return source.isEmpty
     }
 }
-

@@ -53,7 +53,8 @@ struct CommandMap {
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
         ],
         .conv: [
-            CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixOneCommand),  
+            CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixAllCommand),  
+            CommandEntry(kVK_ANSI_F, [.control], simpleKanziFixOneCommand),  
             CommandEntry(kVK_ANSI_N, [.control], simpleKanziSelectNextCommand),
             CommandEntry(kVK_ANSI_P, [.control], simpleKanziSelectPrevCommand),
         ],
