@@ -35,3 +35,31 @@ class SimpleKanziFixOneCommand: BoiledOneCommand {
         return .handled
     }
 }
+
+class SimpleKanziSelectNextCommand: BoiledOneCommand {
+    static let inst: BoiledOneCommand = SimpleKanziSelectNextCommand()
+    var name = "SimpleKanziSelectNextCommand"
+
+    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+        assert(context.mode == .conv)
+        guard let converter = context.simpleKanziConverter else {
+            return .handled
+        }
+        converter.selectRelatively(diff: 1)
+        return .handled
+    }
+}
+
+class SimpleKanziSelectPrevCommand: BoiledOneCommand {
+    static let inst: BoiledOneCommand = SimpleKanziSelectPrevCommand()
+    var name = "SimpleKanziSelectPrevCommand"
+
+    func execute(_ context: BoiledOneContext) -> BoiledOneCommandResult {
+        assert(context.mode == .conv)
+        guard let converter = context.simpleKanziConverter else {
+            return .handled
+        }
+        converter.selectRelatively(diff: -1)
+        return .handled
+    }
+}

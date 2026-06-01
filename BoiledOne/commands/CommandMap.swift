@@ -50,10 +50,12 @@ struct CommandMap {
             CommandEntry(kVK_Tab, [], FixAndPassThruCommand.inst),
             CommandEntry(kVK_Return, [], FixAndPassThruCommand.inst),
             CommandEntry(kVK_Space, [], FixAndPassThruCommand.inst),
-            CommandEntry(kVK_ANSI_J, [.control], SimpleKanziStartCommand.inst)
+            CommandEntry(kVK_ANSI_J, [.control], SimpleKanziStartCommand.inst),
         ],
         .conv: [
-            CommandEntry(kVK_ANSI_L, [.control], SimpleKanziFixOneCommand.inst),           
+            CommandEntry(kVK_ANSI_L, [.control], SimpleKanziFixOneCommand.inst),  
+            CommandEntry(kVK_ANSI_N, [.control], SimpleKanziSelectNextCommand.inst),
+            CommandEntry(kVK_ANSI_P, [.control], SimpleKanziSelectPrevCommand.inst),
         ],
     ]
 
