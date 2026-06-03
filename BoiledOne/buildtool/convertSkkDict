@@ -1,0 +1,57 @@
+#!/usr/bin/env swift
+
+import OSLog
+import Foundation
+
+let logger: Logger = Logger(subsystem: "BoiledOne", category: "dictionaryConverter")
+
+var entries: [String: Set<String>] = [:]
+
+func load(dictPath: String) {
+    do {
+        let content: String = try String(contentsOfFile: dictPath, encoding: .japaneseEUC)
+        var lineCount: Int = 1
+        content.enumerateLines { line, stop in
+            if !line.starts(with: ";") {
+                parseLine(line)
+            }
+            lineCount += 1
+        }
+        logger.info("load: \(lineCount) lines and \(entries.count) entries added successfully")
+    } catch {
+        logger.error("Reading from \(dictPath): \(error)")
+    }
+}
+
+func parseLine(_ line: String) {
+    let tokens = line.split(separator: " ")
+    guard tokens.count == 2 else { return }
+
+    var src = tokens[0]
+    src = src.replacing(#/[A-Za-z]*$/#, with: "")
+    guard src.wholeMatch(of: #/^[\p{Hiragana}ー]+$/#) != nil else { return } // Ignore prefix, suffix, symbols
+
+    for candidate in tokens[1].split(separator: "/") {
+        if (candidate != "") {
+            let wordEnd =  candidate.firstIndex(of: ";") ?? candidate.endIndex
+            entries[String(src), default: []].insert(String(candidate[..<wordEnd]))
+        }
+    }
+}
+
+func dump() {
+    let srcs = entries.keys.sorted()
+    for src in srcs {
+        for dest in entries[src]! {
+            print("\(src) \(dest)")
+        }
+    }
+}
+
+if CommandLine.arguments.count > 1 {
+    let skkDict = CommandLine.arguments[1]
+    load(dictPath: skkDict)
+    dump()
+} else {
+    print("Usage: convertSkkDict.swift SKK_DICT_FILE")
+}
