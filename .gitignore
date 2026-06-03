@@ -4,3 +4,10 @@ buildServer.json
 # Xcode
 *.xcuserstate
 xcuserdata/
+
+# VSCode
+.vscode/settings.json
+
+# Dictionary converted by script
+BoiledOne/Resources/skk-dic.txt
+
