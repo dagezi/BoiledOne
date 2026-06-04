@@ -22,6 +22,7 @@ class SimpleKanziConvertMode: BoiledOneMode {
         for keyCode: Int in BoiledOneMode.selfInsertKeys {
             commandMap.append(CommandEntry(keyCode, [], simpleKanziFixAndExecuteCommand))
         }
+        fallbackCommand = nopCommand
     }
 
     override func getShowString(_ context: BoiledOneContext) -> [(Substring, Int)] {
