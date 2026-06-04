@@ -1,6 +1,5 @@
 import Carbon.HIToolbox
 
-private let romanConverter = RomanConverter(defaultRomanTable)
 private var dictionary = SimpleDictionary()
 
 class SimpleKanziConvertMode: BoiledOneMode {

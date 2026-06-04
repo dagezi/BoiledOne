@@ -47,3 +47,4 @@ class RomanTuple {
     }
 }
 
+let romanConverter = RomanConverter(defaultRomanTable)
