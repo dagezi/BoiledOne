@@ -6,8 +6,7 @@ let logger = Logger(subsystem: "BoiledOne", category: "Controller")
 
 @objc(BoiledOneInputController)
 class BoiledOneInputController: IMKInputController {
-    var context = BoiledOneContext()
-    var commandMap: CommandMap = CommandMap()
+    var context: BoiledOneContext = BoiledOneContext()
 
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
 
@@ -30,7 +29,7 @@ class BoiledOneInputController: IMKInputController {
         let modifiers = context.inputModifiers
         while (result == .reExecute) {
             result = .notHandled
-            for entry in commandMap.map[context.mode]! {
+            for entry in context.mode.commandMap {
                 if keyCode == entry.keyCode, modifiers.intersection(entry.mask) == entry.modifiers {
                     logger.info("Command: \(entry.command.name) \(String(describing: modifiers))")
                     result = entry.command.execute(context)
@@ -39,64 +38,28 @@ class BoiledOneInputController: IMKInputController {
                 }
             }
             if result == .notHandled {
-                let mayFallback: BoiledOneCommand? = commandMap.fallbackCommands[context.mode]
-                if let fallback = mayFallback {
-                    result = fallback.execute(context)
-                    context.prevCommand = fallback
-                }
+                let fallback = context.mode.fallbackCommand
+                result = fallback.execute(context)
+                context.prevCommand = fallback
             }
         }
         context.inputClient = nil
 
-        switch (context.mode) {
-        case .none:
-            client.setMarkedText(
-                "",
-                selectionRange: NSRange(location: 0, length: 0),
-                replacementRange: .notFound,
-            )
-
-        case .raw:
-            let stringToShow = context.rawString
-            let attrs = mark(
-                forStyle: kTSMHiliteSelectedConvertedText,
-                at: NSRange(location: 0, length: stringToShow.utf16.count),
-            )
-
-            let marked = NSAttributedString(
-                string: stringToShow,
-                attributes: attrs as? [NSAttributedString.Key: Any],
-            )
-
-            client.setMarkedText(
-                marked,
-                selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
-                replacementRange: .notFound,
-            )
-        case .conv:
-            if let converter = context.simpleKanziConverter {
-                let converted = converter.getSelectedDest()
-                let unconverted = converter.getUnconverted()
-
-                let stringToShow: String = "\(converted)\(unconverted)"
-                let markedString = NSMutableAttributedString(string: stringToShow)
-
-                markedString.addAttributes(
-                    mark(forStyle: kTSMHiliteSelectedConvertedText, at: .notFound) as! [NSAttributedString.Key: Any],
-                    range: NSRange(location: 0, length: converted.utf16.count),
-                )
-                markedString.addAttributes(
-                    mark(forStyle: kTSMHiliteConvertedText, at: .notFound) as! [NSAttributedString.Key: Any],
-                    range: NSRange(location: converted.utf16.count, length: unconverted.utf16.count),
-                )
-
-                client.setMarkedText(
-                    markedString,
-                    selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
-                    replacementRange: NSRange(location: NSNotFound, length: 0),
-                )
-            }
+        let stringsWithAttr = context.mode.getShowString(context)
+        let stringToShow = stringsWithAttr.map { $0.0 } .joined()
+        let markedString = NSMutableAttributedString(string: stringToShow)
+        var index = 0
+        for (s, attr) in stringsWithAttr {
+            let mark = mark(forStyle: attr, at: .notFound) as! [NSAttributedString.Key: Any]
+            let len = s.utf16.count
+            markedString.addAttributes(mark, range: NSRange(location: index, length: len))
+            index += len
         }
+        client.setMarkedText(
+            markedString,
+            selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
+            replacementRange: .notFound,
+        )
         return result == .handled
     }
 
