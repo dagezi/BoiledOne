@@ -15,6 +15,7 @@ class SimpleKanziConvertMode: BoiledOneMode {
         commandMap = [
             CommandEntry(kVK_ANSI_F, [.control], simpleKanziFixOneCommand),  
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziSelectNextCommand),
+            CommandEntry(kVK_ANSI_K, [.control], simpleKanziConvertToKanaCommand),
             CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixAllCommand),  
             CommandEntry(kVK_ANSI_N, [.control], simpleKanziSelectNextCommand),
             CommandEntry(kVK_ANSI_P, [.control], simpleKanziSelectPrevCommand),
@@ -98,6 +99,14 @@ let simpleKanziSelectPrevCommand = BoiledOneCommand(
             return .handled
         }
         mode.converter.selectRelatively(diff: -1)
+        return .handled
+    }
+)
+
+let simpleKanziConvertToKanaCommand = BoiledOneCommand(
+    name: "SimpleKanziConvertToKanaCommand",
+    handler: {context in 
+        context.mode = KanaMode(context)
         return .handled
     }
 )
