@@ -73,3 +73,21 @@ private let fixAndPassThruCommand = BoiledOneCommand(
         return .through
     }
 )
+
+let cancelCommand = BoiledOneCommand(
+    name: "CancelCommand", 
+    handler: {context in 
+        // TODO: In case part of the src was fixed, recreate rawString
+        context.mode = RawMode()
+        return .handled
+    },
+)
+
+let cancelAndExecuteCommand = BoiledOneCommand(
+    name: "CancelAndExecuteCommand", 
+    handler: { context in
+        // TODO: In case part of the src was fixed, recreate rawString
+        context.mode = RawMode()
+        return .reExecute
+    },
+)

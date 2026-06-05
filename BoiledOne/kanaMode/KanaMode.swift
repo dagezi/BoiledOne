@@ -12,9 +12,13 @@ class KanaMode : BoiledOneMode {
         super.init()
 
         commandMap = [
+            CommandEntry(kVK_ANSI_G, [.control], cancelCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
             CommandEntry(kVK_ANSI_K, [.control], kanaKataHiraCommand),
             CommandEntry(kVK_ANSI_L, [.control], kanaFixCommand),
+            CommandEntry(kVK_ANSI_M, [.control], kanaFixAndExecuteCommand),
+            CommandEntry(kVK_Escape, [], cancelCommand),
+            CommandEntry(kVK_Return, [], kanaFixAndExecuteCommand),
         ]
 
         for keyCode: Int in BoiledOneMode.selfInsertKeys {
