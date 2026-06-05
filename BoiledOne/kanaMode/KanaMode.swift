@@ -12,6 +12,7 @@ class KanaMode : BoiledOneMode {
         super.init()
 
         commandMap = [
+            CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
             CommandEntry(kVK_ANSI_K, [.control], kanaKataHiraCommand),
             CommandEntry(kVK_ANSI_L, [.control], kanaFixCommand),
         ]
