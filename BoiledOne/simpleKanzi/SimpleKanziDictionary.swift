@@ -21,7 +21,7 @@ class SimpleDictionary {
                     lineCount += 1
                 }
                 logger.info("load: \(lineCount) entries added successfully")
-                entries.sort(by: {$0.source >= $1.source})
+                entries.sort(by: {$0.source > $1.source})
             } catch {
                 logger.error("Reading from \(dictPath): \(error)")
             }

@@ -5,17 +5,17 @@ import Foundation
 
 let logger: Logger = Logger(subsystem: "BoiledOne", category: "dictionaryConverter")
 
-var entries: [String: Set<String>] = [:]
+var entries: [String: Array<String>] = [:]
 
 func load(dictPath: String) {
     do {
         let content: String = try String(contentsOfFile: dictPath, encoding: .japaneseEUC)
-        var lineCount: Int = 1
+        var lineCount: Int = 0
         content.enumerateLines { line, stop in
-            if !line.starts(with: ";") {
-                parseLine(line)
-            }
             lineCount += 1
+            if !line.starts(with: ";") {
+                parseLine(line, lineNumber: lineCount)
+            }
         }
         logger.info("load: \(lineCount) lines and \(entries.count) entries added successfully")
     } catch {
@@ -23,18 +23,31 @@ func load(dictPath: String) {
     }
 }
 
-func parseLine(_ line: String) {
-    let tokens = line.split(separator: " ")
-    guard tokens.count == 2 else { return }
+func parseLine(_ line: String, lineNumber: Int) {    
+    guard let m = line.firstMatch(of: #/ +/#) else { 
+        logger.info("parseLine: Ignore the line \(lineNumber) as it doesn't have any spaces")
+        return 
+    }
+    let srcEnd = m.range.lowerBound   
+    let destStart = m.range.upperBound
 
-    var src = tokens[0]
-    src = src.replacing(#/[A-Za-z]*$/#, with: "")
-    guard src.wholeMatch(of: #/^[\p{Hiragana}ー]+$/#) != nil else { return } // Ignore prefix, suffix, symbols
+    let origSrc = line[..<srcEnd]
+    let src = String(origSrc.replacing(#/[A-Za-z]*$/#, with: ""))
+    guard src.wholeMatch(of: #/^[\p{Hiragana}ー]+$/#) != nil else { 
+        logger.info("parseLine: Ignore not Hiragana key \(origSrc)")
+        return 
+    }
 
-    for candidate in tokens[1].split(separator: "/") {
+    let dest = line[destStart...]
+    for candidate in dest.split(separator: "/") {
         if (candidate != "") {
             let wordEnd =  candidate.firstIndex(of: ";") ?? candidate.endIndex
-            entries[String(src), default: []].insert(String(candidate[..<wordEnd]))
+            let c = String(candidate[..<wordEnd])
+            var candidates = entries[src, default: []]
+            if !candidates.contains(c) {
+                candidates.append(c)
+                entries[src] = candidates
+            }
         }
     }
 }
