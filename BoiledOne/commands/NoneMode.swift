@@ -5,6 +5,7 @@ class NoneMode : BoiledOneMode {
         for keyCode: Int in BoiledOneMode.selfInsertKeys {
             commandMap.append(CommandEntry(keyCode, [], insertSelfAndRawModeCommand))
         }
+        fallbackCommand = passThruCommand
     }
 }
 

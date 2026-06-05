@@ -18,7 +18,7 @@ class BoiledOneMode {
     ]
 
     var commandMap: [CommandEntry]
-    var fallbackCommand: BoiledOneCommand = passThruCommand
+    var fallbackCommand: BoiledOneCommand = nopCommand
 
     init() {
         commandMap = []
