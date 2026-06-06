@@ -8,6 +8,12 @@ private let logger = Logger(subsystem: "BoiledOne", category: "Controller")
 class BoiledOneInputController: IMKInputController {
     var context: BoiledOneContext = BoiledOneContext()
 
+    override init(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
+        super.init(server: server, delegate: delegate, client: inputClient)
+
+        logger.info("Initialized.")
+    }
+
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
 
         guard let event = event,

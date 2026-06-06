@@ -6,7 +6,7 @@
 	<string>BoiledOne</string>
 	<key>InputMethodServerControllerClass</key>
 	<string>BoiledOneInputController</string>
-	<key>TISInputSourceId</key>
+	<key>TISInputSourceID</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>TISIntendedLanguage</key>
 	<string>ja</string>
@@ -17,5 +17,9 @@
 	</array>
 	<key>tsInputMethodIconFileKey</key>
 	<string></string>
+	<key>LSBackgroundOnly</key>
+	<true/>
+	<key>LSUIElement</key>
+	<true/>
 </dict>
 </plist>
