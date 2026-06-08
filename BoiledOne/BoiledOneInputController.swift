@@ -2,7 +2,7 @@ import Cocoa
 import InputMethodKit
 import OSLog
 
-let logger = Logger(subsystem: "BoiledOne", category: "Controller")
+private let logger = Logger(subsystem: "BoiledOne", category: "Controller")
 
 @objc(BoiledOneInputController)
 class BoiledOneInputController: IMKInputController {
