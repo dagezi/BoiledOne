@@ -13,7 +13,9 @@ class RawMode : BoiledOneMode {
             CommandEntry(kVK_Return, [], fixAndPassThruCommand),
             CommandEntry(kVK_Space, [], fixAndPassThruCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
-        ]  
+        ]
+
+        fallbackCommand = fixAndExecuteCommand
 
         for keyCode: Int in BoiledOneMode.selfInsertKeys {
             commandMap.append(CommandEntry(keyCode, [], rawInsertSelfCommand))

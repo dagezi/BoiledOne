@@ -24,7 +24,7 @@ class KanaMode : BoiledOneMode {
         for keyCode: Int in BoiledOneMode.selfInsertKeys {
             commandMap.append(CommandEntry(keyCode, [], kanaFixAndExecuteCommand))
         }
-        fallbackCommand = nopCommand
+        fallbackCommand = kanaFixAndExecuteCommand
     }
 
     override func getShowString(_ context: BoiledOneContext) -> [(Substring, Int)] {

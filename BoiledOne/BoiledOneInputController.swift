@@ -45,6 +45,7 @@ class BoiledOneInputController: IMKInputController {
             }
             if result == .notHandled {
                 let fallback = context.mode.fallbackCommand
+                logger.info("Command: \(fallback.name) \(String(describing: modifiers))")
                 result = fallback.execute(context)
                 context.prevCommand = fallback
             }
