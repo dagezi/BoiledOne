@@ -34,22 +34,9 @@
 		98F5120E2CB0F1590009A766 /* BoiledOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoiledOneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		987511972FCBB413005C0871 /* Exceptions for "BoiledOne" folder in "BoiledOneTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Resources/skk-dic.txt",
-			);
-			target = 98F512032CB0F1590009A766 /* BoiledOneTests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		98F511F52CB0F1570009A766 /* BoiledOne */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				987511972FCBB413005C0871 /* Exceptions for "BoiledOne" folder in "BoiledOneTests" target */,
-			);
 			path = BoiledOne;
 			sourceTree = "<group>";
 		};

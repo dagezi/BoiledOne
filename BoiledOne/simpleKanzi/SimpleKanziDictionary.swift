@@ -8,23 +8,42 @@ class SimpleDictionary {
     let logger: Logger = Logger(subsystem: "BoiledOne", category: "SimpleDictionary")
 
     init() {
-        load(dictPath: "skk-dic.txt")
+        load()
     }
 
-    func load(dictPath: String) {
-        if let fileUrl = Bundle.main.url(forResource: dictPath, withExtension: nil) {
-            do {
-                let content = try String(contentsOf: fileUrl, encoding: .utf8)
-                var lineCount: Int = 1
-                content.enumerateLines { line, stop in
-                    self.parseLine(line)
-                    lineCount += 1
-                }
-                logger.info("load: \(lineCount) entries added successfully")
-                entries.sort(by: {$0.source > $1.source})
-            } catch {
-                logger.error("Reading from \(dictPath): \(error)")
+    // Resource directoryにある "*.dict" fileを読み込む。
+    // 辞書式に file名が先にくる辞書のほうが優先順位が高くなる。
+    func load() {
+        let resourcePath = Bundle.main.resourceURL!
+
+        do {
+            let fileUrls = try FileManager.default.contentsOfDirectory(
+                at: resourcePath, 
+                includingPropertiesForKeys: nil, 
+                options: .skipsHiddenFiles
+            )
+            var dictUrls = fileUrls.filter {$0.pathExtension == "dict"}
+            dictUrls.sort(by: { $0.path < $1.path })
+            for dictUrl in dictUrls {
+                loadDict(dictUrl)
             }
+        } catch {
+            logger.error("Reading Resource directory: \(error)")
+        }
+        entries.sort(by: {$0.source > $1.source})
+    }
+
+    private func loadDict(_ dictUrl: URL) {
+        var lineCount: Int = 0
+        do {
+            let content: String = try String(contentsOf: dictUrl, encoding: .utf8)
+            content.enumerateLines { line, stop in
+                lineCount += 1
+                self.parseLine(line)
+            }
+            logger.info("load: \(lineCount) entries from \(dictUrl) successfully")
+        } catch {
+            logger.error("Reading from \(dictUrl): \(error)")
         }
     }
 

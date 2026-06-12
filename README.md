@@ -16,12 +16,14 @@ Emacsの上で動き、英字モードとか意識せずに打てるのが魅力
 各自、buildして `~/Library/Input\ Methods` に `cp -r` してください。
 
 ### 辞書
-Bundleされた辞書しか読めないので、build前に Resources/skk-dic.txtを用意する必要があります。
+Bundleされた辞書しか読めないので、build前に Resources/*.dictを用意する必要があります。
 
 [SKK-JISYO.L](http://openlab.ring.gr.jp/skk/wiki/wiki.cgi?page=SKK%BC%AD%BD%F1) を持って来て、`convertSkkDict` で変換できます:
 ```
-./BoiledOne/buildtool/convertSkkDict ~/Downloads/SKK-JISYO.L > BoiledOne/Resources/skk-dic.txt
+./BoiledOne/buildtool/convertSkkDict ~/Downloads/SKK-JISYO.L > BoiledOne/Resources/0-zisyo-l.dict
 ```
+
+複数の辞書があった場合、辞書順で先にある辞書の entryが優先されます。
 
 ## LICENSE
 MIT LICENSE
