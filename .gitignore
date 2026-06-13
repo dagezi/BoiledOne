@@ -9,5 +9,5 @@ xcuserdata/
 .vscode/settings.json
 
 # Dictionary converted by script
-BoiledOne/Resources/skk-dic.txt
+BoiledOne/Resources/*.dict
 
