@@ -12,7 +12,7 @@ class NoneMode : BoiledOneMode {
 private let insertSelfAndRawModeCommand = BoiledOneCommand(
     name: "InsertSelfCommand",
     handler: { context in
-        context.mode = RawMode()
+        context.mode = RawMode(context)
         return .reExecute
     }
 )

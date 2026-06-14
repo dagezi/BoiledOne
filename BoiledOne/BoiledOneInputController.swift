@@ -56,15 +56,20 @@ class BoiledOneInputController: IMKInputController {
         let stringToShow = stringsWithAttr.map { $0.0 } .joined()
         let markedString = NSMutableAttributedString(string: stringToShow)
         var index = 0
+        var caretIndex = -1
         for (s, attr) in stringsWithAttr {
-            let mark = mark(forStyle: attr, at: .notFound) as! [NSAttributedString.Key: Any]
             let len = s.utf16.count
-            markedString.addAttributes(mark, range: NSRange(location: index, length: len))
+            if (attr == kTSMHiliteCaretPosition) {
+                caretIndex = index
+            } else if (attr >= 0) {
+                let mark: [NSAttributedString.Key : Any] = mark(forStyle: attr, at: .notFound) as! [NSAttributedString.Key: Any]
+                markedString.addAttributes(mark, range: NSRange(location: index, length: len))
+            }
             index += len
         }
         client.setMarkedText(
             markedString,
-            selectionRange: NSRange(location: stringToShow.utf16.count, length: 0),
+            selectionRange: caretIndex >= 0 ? NSRange(location: caretIndex, length: 0) : .notFound,
             replacementRange: .notFound,
         )
         return result == .handled
