@@ -21,5 +21,7 @@
 	<true/>
 	<key>LSUIElement</key>
 	<true/>
+	<key>tsInputMethodIconFileKey</key>
+	<string>mainicon.tiff</string>
 </dict>
 </plist>
