@@ -17,13 +17,23 @@ Emacsの上で動き、英字モードとか意識せずに打てるのが魅力
 
 ### 辞書
 Bundleされた辞書しか読めないので、build前に Resources/*.dictを用意する必要があります。
+複数の辞書があった場合、辞書順で先にある辞書の entryが優先されます。
 
+今は Pubdic+と SKK、二つの辞書から変換できます。片仮名や平仮名の候補が入っている Pubdic+の方がお勧めです。
+
+#### SKK
 [SKK-JISYO.L](http://openlab.ring.gr.jp/skk/wiki/wiki.cgi?page=SKK%BC%AD%BD%F1) を持って来て、`convertSkkDict` で変換できます:
 ```
 ./BoiledOne/buildtool/convertSkkDict ~/Downloads/SKK-JISYO.L > BoiledOne/Resources/0-zisyo-l.dict
 ```
 
-複数の辞書があった場合、辞書順で先にある辞書の entryが優先されます。
+#### Pubdic+
+どこが正式な配布元かよくわかりませんが、[FreeWnn-Archive/PubdicPlus](https://github.com/freewnn/FreeWnn-Archive/tree/main/PubdicPlus)から持って来て遊んでます。
+
+```
+./BoiledOne/buildtool/convertPubdic ../FreeWnn-Archive/PubdicPlus/pubdic.p > BoiledOne/Resources/00-pubdic.dict
+```
+
 
 ## LICENSE
 MIT LICENSE

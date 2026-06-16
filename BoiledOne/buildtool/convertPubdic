@@ -1,0 +1,68 @@
+#!/usr/bin/env swift
+
+import OSLog
+import Foundation
+
+let logger: Logger = Logger(subsystem: "BoiledOne", category: "convertPubdic")
+
+struct Entry {
+    let src: String
+    let dest: String
+    var frequency: Int
+}
+var entries: [String: [String:Entry]] = [:]
+
+func load(dictPath: String) {
+    do {
+        let content: String = try String(contentsOfFile: dictPath, encoding: .japaneseEUC)
+        var lineCount: Int = 0
+        content.enumerateLines { line, stop in
+            lineCount += 1
+            parseLine(line, lineNumber: lineCount)
+        }
+        logger.info("load: \(lineCount) lines and \(entries.count) entries added successfully")
+    } catch {
+        logger.error("Reading from \(dictPath): \(error)")
+    }
+}
+
+func parseLine(_ line: String, lineNumber: Int) {   
+    let tokens = line.split(separator: " ")
+    if tokens.count < 4 {
+        logger.info("line \(lineNumber) doesn't have 4 columns.")
+        return
+    }
+    let src = String(tokens[0])
+    let dest = String(tokens[1])
+    let frequency = Int(tokens[3]) ?? 0
+
+    if let existing = entries[src, default: [:]][dest] {
+        if existing.frequency < frequency {
+            entries[src, default: [:]][dest]?.frequency = frequency
+        }       
+    } else {
+        let newEntry = Entry(src: src, dest: dest, frequency: frequency)
+
+        var e = entries[src, default: [:]]
+        e[dest] = newEntry
+        entries[src] = e
+    }
+}
+
+func dump() {
+    let srcs = entries.keys.sorted()
+    for src in srcs {
+        let es = entries[src]!.values.sorted(by: {$0.frequency >= $1.frequency})
+        for entry in es {
+            print("\(src) \(entry.dest)")
+        }
+    }
+}
+
+if CommandLine.arguments.count > 1 {
+    let dict = CommandLine.arguments[1]
+    load(dictPath: dict)
+    dump()
+} else {
+    print("Usage: convertPubdic PUBDIC_FILE")
+}
