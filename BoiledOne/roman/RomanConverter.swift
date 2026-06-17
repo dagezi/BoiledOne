@@ -11,27 +11,34 @@ class RomanConverter {
         }
     }
 
-    func convert(source: String) -> String {
-        var i = source.startIndex
+    // Converts Roman String into Hiragana and returns Hiragana and index mapping
+    func convert(source: String) -> (String, [Int: Int]) {
+        var i = 0
         var result = ""
+        
+        // A map from position of hiragana to source
+        // Note that we can't save `result`'s index as it's modifiable
+        var hiraToRomaMap: [Int: Int] = [:]
 
-        while (i < source.endIndex) {
+        while (i < source.count) {
             var processed = false
+            let ix: String.Index = source.index(source.startIndex, offsetBy: i)
             for tuple in romanTable {
                 // Suppose most specified candidate comes first
-                if (source[i...].starts(with: tuple.from)) {
+                if (source[ix...].starts(with: tuple.from)) {
                     result.append(tuple.to)
                     processed = true
-                    i = source.index(i, offsetBy: tuple.from.count - tuple.rest.count)
+                    i += tuple.from.count - tuple.rest.count
                     break
                 }
             }
             if (!processed) {
-                result.append(source[i])
-                i = source.index(after: i)
+                result.append(source[ix])
+                i += 1
             }
+            hiraToRomaMap[result.count] = i
         }
-        return result
+        return (result, hiraToRomaMap)
     }
 }
 

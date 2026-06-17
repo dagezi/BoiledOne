@@ -7,7 +7,7 @@ class SimpleKanziConvertMode: BoiledOneMode {
     let hira: String
 
     init(_ context: BoiledOneContext) {
-        self.hira = romanConverter.convert(source: context.rawString)
+        (self.hira, _) = romanConverter.convert(source: context.rawString)
         self.converter = SimpleKanziConverter(dictionary, hira)
 
         super.init()

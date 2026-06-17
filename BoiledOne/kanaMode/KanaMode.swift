@@ -5,7 +5,7 @@ class KanaMode : BoiledOneMode {
     var kataChars: Int
 
     init(_ context: BoiledOneContext) {
-        hira = romanConverter.convert(source: context.rawString)
+        (hira, _) = romanConverter.convert(source: context.rawString)
         result = hira
         kataChars = 0
 
