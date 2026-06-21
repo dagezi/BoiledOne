@@ -15,7 +15,7 @@ class SimpleKanziConvertMode: BoiledOneMode {
         commandMap = [
             CommandEntry(kVK_ANSI_F, [.control], simpleKanziFixOneCommand),  
             CommandEntry(kVK_ANSI_G, [.control], cancelCommand),  
-            CommandEntry(kVK_ANSI_H, [.control], cancelAndExecuteCommand),  
+            CommandEntry(kVK_ANSI_H, [.control], cancelCommand),  
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziSelectNextCommand),
             CommandEntry(kVK_ANSI_K, [.control], cancelAndExecuteCommand),
             CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixAllCommand),  

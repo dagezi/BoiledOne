@@ -8,7 +8,10 @@ class RawMode : BoiledOneMode {
         super.init()
         
         commandMap = [
+            CommandEntry(kVK_ANSI_A, [.control] , moveToStartCommand),
             CommandEntry(kVK_ANSI_B, [.control] , moveLeftCommand),
+            CommandEntry(kVK_ANSI_D, [.control] , deleteCharCommand),
+            CommandEntry(kVK_ANSI_E, [.control] , moveToEndCommand),
             CommandEntry(kVK_ANSI_F, [.control] , moveRightCommand),
             CommandEntry(kVK_ANSI_H, [.control] , rawBackSpaceCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
@@ -72,6 +75,35 @@ private let moveLeftCommand = BoiledOneCommand(
         guard let mode: RawMode = context.mode as? RawMode else { return .handled }
         if mode.insertIndex != context.rawString.startIndex {
             mode.insertIndex = context.rawString.index(before: mode.insertIndex)            
+        }
+        return .handled
+    },
+)
+
+private let moveToStartCommand = BoiledOneCommand(
+    name: "MoveToStartCommand", 
+    handler: { context in
+        guard let mode: RawMode = context.mode as? RawMode else { return .handled }
+        mode.insertIndex = context.rawString.startIndex
+        return .handled
+    },
+)
+
+private let moveToEndCommand = BoiledOneCommand(
+    name: "MoveToEndCommand", 
+    handler: { context in
+        guard let mode: RawMode = context.mode as? RawMode else { return .handled }
+        mode.insertIndex = context.rawString.endIndex
+        return .handled
+    },
+)
+
+private let deleteCharCommand = BoiledOneCommand(
+    name: "DeleteCharCommand", 
+    handler: { context in
+        guard let mode: RawMode = context.mode as? RawMode else { return .handled }
+        if mode.insertIndex != context.rawString.endIndex {
+            context.rawString.remove(at: mode.insertIndex)
         }
         return .handled
     },
