@@ -37,6 +37,10 @@ class SimpleKanziConvertMode: BoiledOneMode {
             (converter.getUnconverted(), kTSMHiliteConvertedText),
         ]        
     }
+
+    override func deactivate(_ context: BoiledOneContext) {
+        _ = simpleKanziFixAllCommand.handler(context)
+    }
 }
 
 let simpleKanziStartCommand = BoiledOneCommand(

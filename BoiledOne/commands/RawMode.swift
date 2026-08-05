@@ -39,6 +39,10 @@ class RawMode : BoiledOneMode {
             (context.rawString[insertIndex...], -1),
         ]
     }
+
+    override func deactivate(_ context: BoiledOneContext) {
+        _ = fixCommand.handler(context)
+    }
 }
 
 let rawInsertSelfCommand = BoiledOneCommand(

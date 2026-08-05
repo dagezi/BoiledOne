@@ -75,6 +75,17 @@ class BoiledOneInputController: IMKInputController {
         return result == .handled
     }
 
+
+    override func deactivateServer(_ sender: Any!) {
+        logger.info("Boiled: deactivateServer")
+        guard let client = sender as? IMKTextInput else {
+            return
+        }
+
+        context.inputClient = client
+        context.mode.deactivate(context)
+    }
+
     override func candidates(_ sender: Any!) -> [Any]! {
         // Return an empty list; no candidate window for now.
         return []

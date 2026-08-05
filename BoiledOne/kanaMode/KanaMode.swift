@@ -34,6 +34,10 @@ class KanaMode : BoiledOneMode {
         ]
     }
 
+    override func deactivate(_ context: BoiledOneContext) {
+        _ = kanaFixCommand.handler(context)
+    }
+
     func shrinkKatakana() {
         if kataChars > 0 {
             kataChars -= 1

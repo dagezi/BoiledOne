@@ -27,6 +27,10 @@ class BoiledOneMode {
     func getShowString(_ context: BoiledOneContext) -> [(Substring, Int)] {
         return []
     }
+
+    func deactivate(_ context: BoiledOneContext) {
+        // 
+    }
 }
 
 struct CommandEntry {
