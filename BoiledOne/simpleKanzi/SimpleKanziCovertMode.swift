@@ -5,9 +5,10 @@ private var dictionary = SimpleDictionary()
 class SimpleKanziConvertMode: BoiledOneMode {
     let converter: SimpleKanziConverter
     let hira: String
+    let hiraToRomaMap: [Int:Int]
 
     init(_ context: BoiledOneContext) {
-        (self.hira, _) = romanConverter.convert(source: context.rawString)
+        (self.hira, self.hiraToRomaMap) = romanConverter.convert(source: context.rawString)
         self.converter = SimpleKanziConverter(dictionary, hira)
 
         super.init()
@@ -73,6 +74,14 @@ let simpleKanziFixOneCommand = BoiledOneCommand(
             return .handled
         }
         context.insertToClient(String(mode.converter.getSelectedDest()))
+        let consumedHira = mode.converter.getSelectedSrc()        
+        if let consumedRoma = mode.hiraToRomaMap[consumedHira.count] {
+            let newStartIx = context.rawString.index(context.rawString.startIndex, offsetBy: consumedRoma)
+            context.rawString = String(context.rawString[newStartIx...])
+        } else {
+            // TODO: "tya" → "ちゃ" → "地|ゃ" のようなときにおこる。これをキャンセルしたら "xya" がいい?
+        }
+
         mode.converter.fixOne()
         if mode.converter.isEmpty() {
             context.mode = NoneMode()

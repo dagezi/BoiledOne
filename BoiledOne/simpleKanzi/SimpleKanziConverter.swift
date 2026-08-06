@@ -34,11 +34,15 @@ class SimpleKanziConverter {
         candidateIndex = 0
     }
 
-    func getSelectedEndIndex() -> String.Index {
+    private func getSelectedEndIndex() -> String.Index {
         let count = candidateIndex < candidates.count ?
             candidates[candidateIndex].source[...].count : 1
 
         return source.index(source.startIndex, offsetBy: count)
+    }
+
+    func getSelectedSrc() -> Substring {
+        return source[source.startIndex..<getSelectedEndIndex()]
     }
 
     func getSelectedDest() -> Substring {
@@ -64,7 +68,7 @@ class SimpleKanziConverter {
 
     func selectRelatively(diff: Int) {
         guard !candidates.isEmpty else { return }
-        candidateIndex = (candidateIndex + diff).modulo(candidates.count)
+        candidateIndex = (candidateIndex + diff).modulo(candidates.count + 1)
     }
 
     func isEmpty() -> Bool {

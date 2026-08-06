@@ -11,7 +11,7 @@ class RomanConverter {
         }
     }
 
-    // Converts Roman String into Hiragana and returns Hiragana and index mapping
+    // Converts Roman String into Hiragana and returns a map from each Hiragana index to Roma-zi index
     func convert(source: String) -> (String, [Int: Int]) {
         var i = 0
         var result = ""
