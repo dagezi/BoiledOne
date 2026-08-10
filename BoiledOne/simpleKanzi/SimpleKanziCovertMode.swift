@@ -6,6 +6,8 @@ class SimpleKanziConvertMode: BoiledOneMode {
     let converter: SimpleKanziConverter
     let hira: String
     let hiraToRomaMap: [Int:Int]
+    var fixedHiraCount = 0
+    var fixedRomaCount = 0
 
     init(_ context: BoiledOneContext) {
         (self.hira, self.hiraToRomaMap) = romanConverter.convert(source: context.rawString)
@@ -74,9 +76,12 @@ let simpleKanziFixOneCommand = BoiledOneCommand(
             return .handled
         }
         context.insertToClient(String(mode.converter.getSelectedDest()))
-        let consumedHira = mode.converter.getSelectedSrc()        
-        if let consumedRoma = mode.hiraToRomaMap[consumedHira.count] {
+        let consumedHira = mode.converter.getSelectedSrc()    
+        mode.fixedHiraCount += consumedHira.count    
+        if let fixedRoma = mode.hiraToRomaMap[mode.fixedHiraCount] {
+            let consumedRoma = fixedRoma - mode.fixedRomaCount
             let newStartIx = context.rawString.index(context.rawString.startIndex, offsetBy: consumedRoma)
+            mode.fixedRomaCount = fixedRoma
             context.rawString = String(context.rawString[newStartIx...])
         } else {
             // TODO: "tya" → "ちゃ" → "地|ゃ" のようなときにおこる。これをキャンセルしたら "xya" がいい?
