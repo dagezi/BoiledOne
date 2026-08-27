@@ -47,7 +47,7 @@ class RomanTuple {
     let to: String
     let rest: String
 
-    init(_ from: String, _ to: String, _ rest: String) {
+    init(_ from: String, _ to: String, _ rest: String = "") {
         self.from = from
         self.to = to
         self.rest = rest
