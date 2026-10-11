@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-CONFIGURATION="release"
+CONFIGURATION="${1:-release}"
 APP_NAME="BoiledOne.app"
 
 swift build -c "$CONFIGURATION"

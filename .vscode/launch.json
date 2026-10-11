@@ -20,6 +20,13 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "type": "lldb-dap",
+            "request": "attach",
+            "name": "Attach to BoiledOne.app",
+            "program": "${workspaceFolder}/BoiledOne.app/Contents/MacOS/BoiledOne",
+            "waitFor": true
+        },
+        {
             "type": "swift",
             "request": "launch",
             "args": [],
