@@ -18,6 +18,26 @@
             "args": [],
             "env": [],
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:BoiledOne}",
+            "name": "Debug BoiledOne",
+            "target": "BoiledOne",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug BoiledOne"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:BoiledOne}",
+            "name": "Release BoiledOne",
+            "target": "BoiledOne",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release BoiledOne"
         }
     ]
 }

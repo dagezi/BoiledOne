@@ -2,12 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleExecutable</key>
+	<string>BoiledOne</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.github.dagezi.inputmethod.BoiledOne</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>BoiledOne</string>
+	<key>CFBundleDisplayName</key>
+	<string>BoiledOne</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.6</string>
 	<key>InputMethodConnectionName</key>
 	<string>BoiledOne</string>
 	<key>InputMethodServerControllerClass</key>
 	<string>BoiledOneInputController</string>
 	<key>TISInputSourceID</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>io.github.dagezi.inputmethod.BoiledOne</string>
 	<key>TISIntendedLanguage</key>
 	<string>ja</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
@@ -16,12 +34,10 @@
 		<string>Hiragana</string>
 	</array>
 	<key>tsInputMethodIconFileKey</key>
-	<string></string>
+	<string>mainicon.tiff</string>
 	<key>LSBackgroundOnly</key>
 	<true/>
 	<key>LSUIElement</key>
 	<true/>
-	<key>tsInputMethodIconFileKey</key>
-	<string>mainicon.tiff</string>
 </dict>
 </plist>

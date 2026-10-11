@@ -1,13 +1,10 @@
-# xcode-builder-server
-buildServer.json
-
-# Xcode
-*.xcuserstate
-xcuserdata/
+# SwiftPM
+.build/
+.swiftpm/
+*.app
 
 # VSCode
 .vscode/settings.json
 
 # Dictionary converted by script
-BoiledOne/Resources/*.dict
-
+Sources/BoiledOne/Resources/*.dict

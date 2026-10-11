@@ -6,42 +6,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 BoiledOne is a macOS Japanese Input Method (IME) built with InputMethodKit. It is inspired by the classic BoiledEgg IME for Emacs, with a philosophy of typing without switching explicitly between ASCII and Japanese modes.
 
+This is a SwiftPM package. `swift build` alone only produces a bare executable — it does not produce the signed `.app` bundle (Info.plist, entitlements, resources) that InputMethodKit requires, so packaging goes through `build.sh`.
+
 ## Build & Deploy
 
 ```bash
-xcodebuild -project BoiledOne.xcodeproj -scheme BoiledOne -configuration Release build
+./build.sh
 ```
 
-The built app lands in `~/Library/Developer/Xcode/DerivedData/BoiledOne-*/Build/Products/Release/`. Deploy it:
+This runs `swift build -c release`, assembles `BoiledOne.app` at the repo root (`Contents/MacOS`, `Contents/Resources`, `Contents/Info.plist` from `Packaging/Info.plist`), and ad-hoc codesigns it with `Packaging/BoiledOne.entitlements`. Deploy it:
 
 ```bash
-cp -r $(xcodebuild -project BoiledOne.xcodeproj -scheme BoiledOne -configuration Release -showBuildSettings 2>/dev/null | awk '/BUILT_PRODUCTS_DIR/{print $3}')/BoiledOne.app ~/Library/Input\ Methods/
+cp -r BoiledOne.app ~/Library/Input\ Methods/
 ```
 
 ### Dictionary Setup (required before building)
 
-Dictionaries must be placed in `BoiledOne/Resources/*.dict` before building, since they are bundled into the app. Files are loaded in alphabetical order; earlier filenames take priority.
+Dictionaries must be placed in `Sources/BoiledOne/Resources/*.dict` before building, since `build.sh` bundles them into the app. Files are loaded in alphabetical order; earlier filenames take priority.
 
 **Pubdic+** (recommended — includes katakana/hiragana candidates):
 ```bash
-./BoiledOne/buildtool/convertPubdic ../FreeWnn-Archive/PubdicPlus/pubdic.p > BoiledOne/Resources/00-pubdic.dict
+./buildtool/convertPubdic ../FreeWnn-Archive/PubdicPlus/pubdic.p > Sources/BoiledOne/Resources/00-pubdic.dict
 ```
 
 **SKK** (SKK-JISYO.L):
 ```bash
-./BoiledOne/buildtool/convertSkkDict ~/Downloads/SKK-JISYO.L > BoiledOne/Resources/0-zisyo-l.dict
+./buildtool/convertSkkDict ~/Downloads/SKK-JISYO.L > Sources/BoiledOne/Resources/0-zisyo-l.dict
 ```
 
 ## Running Tests
 
-Unit tests only (no UI):
 ```bash
-xcodebuild -project BoiledOne.xcodeproj -scheme BoiledOne -destination 'platform=macOS' -only-testing:BoiledOneTests test
-```
-
-All tests including UI tests (will briefly launch the app on screen):
-```bash
-xcodebuild -project BoiledOne.xcodeproj -scheme BoiledOne -destination 'platform=macOS' test
+swift test
 ```
 
 ## Architecture
