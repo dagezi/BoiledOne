@@ -19,11 +19,13 @@ class SimpleKanziConvertMode: BoiledOneMode {
             CommandEntry(kVK_ANSI_F, [.control], simpleKanziFixOneCommand),  
             CommandEntry(kVK_ANSI_G, [.control], cancelCommand),  
             CommandEntry(kVK_ANSI_H, [.control], cancelCommand),  
+            CommandEntry(kVK_ANSI_I, [.control], simpleKanziShrinkCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziSelectNextCommand),
             CommandEntry(kVK_ANSI_K, [.control], cancelAndExecuteCommand),
             CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixAllCommand),  
             CommandEntry(kVK_ANSI_M, [.control], simpleKanziFixAndExecuteCommand),  
             CommandEntry(kVK_ANSI_N, [.control], simpleKanziSelectNextCommand),
+            CommandEntry(kVK_ANSI_O, [.control], simpleKanziExtendCommand),
             CommandEntry(kVK_ANSI_P, [.control], simpleKanziSelectPrevCommand),
             CommandEntry(kVK_Escape, [], cancelCommand),
             CommandEntry(kVK_Return, [], simpleKanziFixAllCommand),  
@@ -122,6 +124,28 @@ let simpleKanziSelectPrevCommand = BoiledOneCommand(
             return .handled
         }
         mode.converter.selectRelatively(diff: -1)
+        return .handled
+    },
+)
+
+let simpleKanziShrinkCommand = BoiledOneCommand(
+    name: "SimpleKanziShrinkCommand",
+    handler: {context in
+        guard let mode: SimpleKanziConvertMode = context.mode as? SimpleKanziConvertMode  else {
+            return .handled
+        }
+        mode.converter.extendCandidate(diff: -1)
+        return .handled
+    },
+)
+
+let simpleKanziExtendCommand = BoiledOneCommand(
+    name: "SimpleKanziExtendCommand",
+    handler: {context in
+        guard let mode: SimpleKanziConvertMode = context.mode as? SimpleKanziConvertMode  else {
+            return .handled
+        }
+        mode.converter.extendCandidate(diff: 1)
         return .handled
     },
 )

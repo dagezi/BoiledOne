@@ -13,6 +13,7 @@ class SimpleKanziConverter {
     var source: Substring
     var candidates: [SimpleDictionaryEntry] = []
     var candidateIndex: Int = 0 // Index in candidates
+    var consumedLen: Int? = nil
 
     let dictionary: SimpleDictionary
 
@@ -26,17 +27,24 @@ class SimpleKanziConverter {
 
     func updateCandidates() {
         candidates = []
-        for entry in dictionary.entries[candidateIndex...] {
-            if source.starts(with: entry.source) {
+        let maxLen = consumedLen ?? .max
+        for entry in dictionary.entries {
+            if source.starts(with: entry.source) && entry.source.count <= maxLen {
                 candidates.append(entry)
             }
         }
         candidateIndex = 0
     }
 
-    private func getSelectedEndIndex() -> String.Index {
-        let count = candidateIndex < candidates.count ?
-            candidates[candidateIndex].source[...].count : 1
+
+    private func getConsumedLen() -> Int {
+        return consumedLen ?? (
+            candidateIndex < candidates.count ?
+            candidates[candidateIndex].source[...].count : 1)
+    }
+
+    private func getSelectedEndIndex() -> String.Index {        
+        let count = getConsumedLen()
 
         return source.index(source.startIndex, offsetBy: count)
     }
@@ -47,7 +55,16 @@ class SimpleKanziConverter {
 
     func getSelectedDest() -> Substring {
         if candidateIndex < candidates.count {
-            return candidates[candidateIndex].dest[...]
+            var converted = candidates[candidateIndex].dest[...]
+            if let len = consumedLen {
+                let skip = candidates[candidateIndex].source.count
+                if (len > skip) {
+                    let suffixFrom = source.index(source.startIndex, offsetBy: skip)
+                    let suffixTo = source.index(source.startIndex, offsetBy: len)
+                    converted = converted + source[suffixFrom..<suffixTo]
+                }
+            }
+            return converted
         }
         return source[..<getSelectedEndIndex()]
     }
@@ -56,13 +73,30 @@ class SimpleKanziConverter {
         return source[getSelectedEndIndex()...]
     }
 
+    func extendCandidate(diff: Int) {
+        let count = getConsumedLen()
+
+        if diff < 0 {
+            let newLen = max(1, count + diff)
+            consumedLen = newLen
+            if (newLen < candidates[candidateIndex].source.count) {
+                updateCandidates()
+            }
+        } else {
+            // 長くなるときは候補を変えない。未変換部分がのびるだけ。
+            consumedLen = min(source.count, count + diff)
+        }
+    }
+
     func fixOne() {
         source = getUnconverted()
+        consumedLen = nil
         updateCandidates()
     }
 
     func fixAll() {
         source = source[source.endIndex...]
+        consumedLen = nil
         updateCandidates()
     }
 
