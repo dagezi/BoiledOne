@@ -19,6 +19,7 @@ struct SimpleKanziConverterTests {
         let converter = SimpleKanziConverter(dictionary, "かんじ")
 
         #expect(converter.candidates.map(\.dest) == ["漢字", "感じ", "漢"])
+        #expect(converter.getSource() == "かんじ")
         #expect(converter.getSelectedSrc() == "かんじ")
         #expect(converter.getSelectedDest() == "漢字")
         #expect(converter.getUnconverted() == "")
@@ -59,10 +60,12 @@ struct SimpleKanziConverterTests {
 
         converter.fixOne()
         #expect(!converter.isEmpty())
+        #expect(converter.getSource() == "じ")
         #expect(converter.getSelectedSrc() == "じ")
         #expect(converter.getSelectedDest() == "字")
 
         converter.fixOne()
+        #expect(converter.getSource() == "")
         #expect(converter.isEmpty())
     }
 

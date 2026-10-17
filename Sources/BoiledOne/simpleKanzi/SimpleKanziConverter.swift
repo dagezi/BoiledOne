@@ -9,7 +9,6 @@ struct SimpleDictionaryEntry {
 }
 
 class SimpleKanziConverter {
-    let original: String   // Source Hiragana String
     var source: Substring
     var candidates: [SimpleDictionaryEntry] = []
     var candidateIndex: Int = 0 // Index in candidates
@@ -19,8 +18,7 @@ class SimpleKanziConverter {
 
     init(_ dictionary: SimpleDictionary, _ src: String) {
         self.dictionary = dictionary
-        original = src
-        source = original[...]
+        source = src[...]
         
         updateCandidates()
     }
@@ -49,6 +47,10 @@ class SimpleKanziConverter {
         return source.index(source.startIndex, offsetBy: count)
     }
 
+    func getSource() -> Substring {
+        return source
+    }
+        
     func getSelectedSrc() -> Substring {
         return source[source.startIndex..<getSelectedEndIndex()]
     }
