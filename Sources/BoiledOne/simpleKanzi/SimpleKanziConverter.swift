@@ -79,7 +79,7 @@ class SimpleKanziConverter {
         if diff < 0 {
             let newLen = max(1, count + diff)
             consumedLen = newLen
-            if (newLen < candidates[candidateIndex].source.count) {
+            if (candidateIndex < candidates.count && newLen < candidates[candidateIndex].source.count) {
                 updateCandidates()
             }
         } else {
