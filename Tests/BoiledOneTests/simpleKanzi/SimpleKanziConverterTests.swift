@@ -103,7 +103,7 @@ struct SimpleKanziConverterTests {
         #expect(converter.getSelectedSrc() == "かんじ")
     }
 
-    @Test func extendCandidate_extendCandidate_ifNoMatch() async {
+    @Test func extendCandidate_extendCandidate_ifNoMatch() {
         let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "ほげ")
         converter.extendCandidate(diff: 1)
         #expect(converter.getSelectedSrc() == "ほげ")
@@ -116,7 +116,7 @@ struct SimpleKanziConverterTests {
         #expect(converter.getUnconverted() == "げ")
     }
 
-    @Test func extendCandidate_shrinkNothing_ifNoMatch() async {
+    @Test func extendCandidate_shrinkNothing_ifNoMatch() {
         let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "ほげ")
         converter.extendCandidate(diff: -1)
         #expect(converter.getSelectedSrc() == "ほ")
@@ -124,12 +124,44 @@ struct SimpleKanziConverterTests {
         #expect(converter.getUnconverted() == "げ")
     }
 
-    @Test func extendCandidate_shrinkNothing_ifKanaIsSelected() async {
+    @Test func extendCandidate_shrinkNothing_ifKanaIsSelected() {
         let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "かんじ")
         converter.selectRelatively(diff: 3)  // candidateIndex == candidates.count
         converter.extendCandidate(diff: -1)
         #expect(converter.getSelectedSrc() == "か")
         #expect(converter.getSelectedDest() == "か")
         #expect(converter.getUnconverted() == "んじ")
+    }
+
+    @Test func selectKanaAll() {
+        let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "かんじは")
+        converter.selectKanaAll()
+        #expect(converter.getSelectedSrc() == "かんじは")
+        #expect(converter.getSelectedDest() == "かんじは")
+        #expect(converter.getUnconverted() == "")
+
+        converter.extendCandidate(diff: -1)
+        #expect(converter.getSelectedSrc() == "かんじ")
+        #expect(converter.getSelectedDest() == "かんじ")
+        #expect(converter.getUnconverted() == "は")
+    }
+
+    @Test func selectKanaOrShrink() {
+        let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "かんじは")
+        #expect(converter.getSelectedSrc() == "かんじ")
+        #expect(converter.getSelectedDest() == "漢字")
+
+        converter.selectKanaOrShrink()
+        #expect(converter.getSelectedSrc() == "かんじ")
+        #expect(converter.getSelectedDest() == "かんじ")
+
+        converter.selectKanaOrShrink()
+        #expect(converter.getSelectedDest() == "カンジ")
+
+        converter.selectKanaOrShrink()
+        #expect(converter.getSelectedDest() == "カンじ")
+
+        converter.extendCandidate(diff: 1)
+        #expect(converter.getSelectedDest() == "カンじは")
     }
 }

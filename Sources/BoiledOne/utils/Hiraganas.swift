@@ -1,6 +1,6 @@
 import Foundation
 
-func hiraToKata(_ src: String, range: Range<String.Index>? = nil) -> String {
+func hiraToKata(_ src: Substring, range: Range<String.Index>? = nil) -> Substring {
     var conv = ""
     let sIndex: String.Index = range?.lowerBound ?? src.startIndex
     let eIndex: String.Index = range?.upperBound ?? src.endIndex
@@ -21,7 +21,7 @@ func hiraToKata(_ src: String, range: Range<String.Index>? = nil) -> String {
 }
 
 
-func kataTohira(_ src: String, range: Range<String.Index>? = nil) -> String {
+func kataTohira(_ src: Substring, range: Range<String.Index>? = nil) -> Substring {
     if (kataHiraMap.isEmpty) {
         initKataHiraMap()
     }

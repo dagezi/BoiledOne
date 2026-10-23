@@ -48,7 +48,7 @@ class KanaMode : BoiledOneMode {
         if (kataChars == 0) {
             result = hira
         } else {
-            result = hiraToKata(hira, range: hira.startIndex ..< hira.index(hira.startIndex, offsetBy: kataChars))
+            result = String(hiraToKata(hira[...], range: hira.startIndex ..< hira.index(hira.startIndex, offsetBy: kataChars)))
         }
     }
 }

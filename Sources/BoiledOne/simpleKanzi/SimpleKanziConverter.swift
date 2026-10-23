@@ -12,6 +12,7 @@ class SimpleKanziConverter {
     var source: Substring
     var candidates: [SimpleDictionaryEntry] = []
     var candidateIndex: Int = 0 // Index in candidates
+    var kataLen: Int = 0        // In case kana is selected, count of leading Kanakana
     var consumedLen: Int? = nil
 
     let dictionary: SimpleDictionary
@@ -32,12 +33,12 @@ class SimpleKanziConverter {
             }
         }
         candidateIndex = 0
+        kataLen = 0
     }
-
 
     private func getConsumedLen() -> Int {
         return consumedLen ?? (
-            candidateIndex < candidates.count ?
+            doesConvert() ?
             candidates[candidateIndex].source[...].count : 1)
     }
 
@@ -47,28 +48,34 @@ class SimpleKanziConverter {
         return source.index(source.startIndex, offsetBy: count)
     }
 
+    func doesConvert() -> Bool {
+        return candidateIndex < candidates.count
+    }
+
     func getSource() -> Substring {
         return source
     }
-        
+
     func getSelectedSrc() -> Substring {
         return source[source.startIndex..<getSelectedEndIndex()]
     }
 
     func getSelectedDest() -> Substring {
-        if candidateIndex < candidates.count {
-            var converted = candidates[candidateIndex].dest[...]
-            if let len = consumedLen {
-                let skip = candidates[candidateIndex].source.count
-                if (len > skip) {
-                    let suffixFrom = source.index(source.startIndex, offsetBy: skip)
-                    let suffixTo = source.index(source.startIndex, offsetBy: len)
-                    converted = converted + source[suffixFrom..<suffixTo]
-                }
-            }
-            return converted
+        if !doesConvert() {
+            let selectedSrc = getSelectedSrc()
+            let kataRange = selectedSrc.startIndex ..< source.index(selectedSrc.startIndex, offsetBy: kataLen)
+            return hiraToKata(selectedSrc, range: kataRange)
         }
-        return source[..<getSelectedEndIndex()]
+        var converted = candidates[candidateIndex].dest[...]
+        if let len = consumedLen {
+            let skip = candidates[candidateIndex].source.count
+            if (len > skip) {
+                let suffixFrom = source.index(source.startIndex, offsetBy: skip)
+                let suffixTo = source.index(source.startIndex, offsetBy: len)
+                converted = converted + source[suffixFrom..<suffixTo]
+            }
+        }
+        return converted
     }
 
     func getUnconverted() -> Substring {
@@ -81,7 +88,7 @@ class SimpleKanziConverter {
         if diff < 0 {
             let newLen = max(1, count + diff)
             consumedLen = newLen
-            if (candidateIndex < candidates.count && newLen < candidates[candidateIndex].source.count) {
+            if (doesConvert() && newLen < candidates[candidateIndex].source.count) {
                 updateCandidates()
             }
         } else {
@@ -105,9 +112,30 @@ class SimpleKanziConverter {
     func selectRelatively(diff: Int) {
         guard !candidates.isEmpty else { return }
         candidateIndex = (candidateIndex + diff).modulo(candidates.count + 1)
+        kataLen = 0
     }
 
     func isEmpty() -> Bool {
         return source.isEmpty
+    }
+
+    func selectKanaAll() {
+        candidateIndex = candidates.count + 1
+        consumedLen = source.count
+        kataLen = 0
+    }
+
+    func selectKanaOrShrink() {
+        if (doesConvert()) {
+            consumedLen = candidates[candidateIndex].source.count
+            candidateIndex = candidates.count + 1
+            kataLen = 0
+        } else {
+            if kataLen == 0 {
+                kataLen = getConsumedLen()
+            } else {
+                kataLen -= 1
+            }
+        }
     }
 }
