@@ -21,7 +21,7 @@ class SimpleKanziConvertMode: BoiledOneMode {
             CommandEntry(kVK_ANSI_H, [.control], cancelCommand),  
             CommandEntry(kVK_ANSI_I, [.control], simpleKanziShrinkCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziSelectNextCommand),
-            CommandEntry(kVK_ANSI_K, [.control], cancelAndExecuteCommand),
+            CommandEntry(kVK_ANSI_K, [.control], simpleKanziKataHiraCommand),
             CommandEntry(kVK_ANSI_L, [.control], simpleKanziFixAllCommand),  
             CommandEntry(kVK_ANSI_M, [.control], simpleKanziFixAndExecuteCommand),  
             CommandEntry(kVK_ANSI_N, [.control], simpleKanziSelectNextCommand),
@@ -53,6 +53,17 @@ let simpleKanziStartCommand = BoiledOneCommand(
     handler: {context in
         context.mode = SimpleKanziConvertMode(context)
         
+        return .handled
+    },
+)
+
+let simpleKanziStartWithKanaCommand = BoiledOneCommand(
+    name: "SimpleKanziStartWithKanaCommand",
+    handler: {context in
+        let mode: SimpleKanziConvertMode = SimpleKanziConvertMode(context)
+        mode.converter.selectKanaAll()
+        context.mode = mode
+
         return .handled
     },
 )
@@ -124,6 +135,17 @@ let simpleKanziSelectPrevCommand = BoiledOneCommand(
             return .handled
         }
         mode.converter.selectRelatively(diff: -1)
+        return .handled
+    },
+)
+
+let simpleKanziKataHiraCommand = BoiledOneCommand(
+    name: "SimpleKanziKataHiraCommand",
+    handler: {context in
+        guard let mode: SimpleKanziConvertMode = context.mode as? SimpleKanziConvertMode  else {
+            return .handled
+        }
+        mode.converter.selectKanaOrShrink()
         return .handled
     },
 )

@@ -88,8 +88,12 @@ class SimpleKanziConverter {
         if diff < 0 {
             let newLen = max(1, count + diff)
             consumedLen = newLen
-            if (doesConvert() && newLen < candidates[candidateIndex].source.count) {
-                updateCandidates()
+            if doesConvert() {
+                if newLen < candidates[candidateIndex].source.count {
+                    updateCandidates()
+                }
+            } else {
+                kataLen = min(kataLen, newLen)
             }
         } else {
             // 長くなるときは候補を変えない。未変換部分がのびるだけ。
@@ -127,7 +131,7 @@ class SimpleKanziConverter {
 
     func selectKanaOrShrink() {
         if (doesConvert()) {
-            consumedLen = candidates[candidateIndex].source.count
+            consumedLen = getConsumedLen()
             candidateIndex = candidates.count + 1
             kataLen = 0
         } else {

@@ -15,7 +15,7 @@ class RawMode : BoiledOneMode {
             CommandEntry(kVK_ANSI_F, [.control] , moveRightCommand),
             CommandEntry(kVK_ANSI_H, [.control] , rawBackSpaceCommand),
             CommandEntry(kVK_ANSI_J, [.control], simpleKanziStartCommand),
-            CommandEntry(kVK_ANSI_K, [.control], kanaStartCommand),
+            CommandEntry(kVK_ANSI_K, [.control], simpleKanziStartWithKanaCommand),
             CommandEntry(kVK_ANSI_L, [.control], fixCommand),
             CommandEntry(kVK_ANSI_M, [.control], fixAndPassThruCommand),
             CommandEntry(kVK_Tab, [], fixAndPassThruCommand),

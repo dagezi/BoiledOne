@@ -158,10 +158,29 @@ struct SimpleKanziConverterTests {
         converter.selectKanaOrShrink()
         #expect(converter.getSelectedDest() == "カンジ")
 
-        converter.selectKanaOrShrink()
-        #expect(converter.getSelectedDest() == "カンじ")
+        converter.extendCandidate(diff: -1)
+        #expect(converter.getSelectedDest() == "カン")
 
         converter.extendCandidate(diff: 1)
-        #expect(converter.getSelectedDest() == "カンじは")
+        #expect(converter.getSelectedDest() == "カンじ")
+
+        converter.selectKanaOrShrink()
+        #expect(converter.getSelectedDest() == "カんじ")
+
+        converter.extendCandidate(diff: 1)
+        #expect(converter.getSelectedDest() == "カんじは")
+    }
+
+    @Test func selectKanaOrShrink_keepsOriginalConsumedLen() {
+        let converter = SimpleKanziConverter(SimpleKanziConverterTests.makeDictionary(), "かんじは")
+
+        converter.extendCandidate(diff: 1)
+
+        #expect(converter.getSelectedSrc() == "かんじは")
+        #expect(converter.getSelectedDest() == "漢字は")
+
+        converter.selectKanaOrShrink()
+        #expect(converter.getSelectedSrc() == "かんじは")
+        #expect(converter.getSelectedDest() == "かんじは")
     }
 }
