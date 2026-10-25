@@ -76,14 +76,22 @@ class BoiledOneInputController: IMKInputController {
     }
 
 
+    override func commitComposition(_ sender: Any!) {
+        fixComposition(sender)
+    }
+
     override func deactivateServer(_ sender: Any!) {
-        logger.info("Boiled: deactivateServer")
+        fixComposition(sender)
+    }
+
+    private func fixComposition(_ sender: Any!) {
         guard let client = sender as? IMKTextInput else {
             return
         }
 
         context.inputClient = client
         context.mode.deactivate(context)
+        context.inputClient = nil
     }
 
     override func candidates(_ sender: Any!) -> [Any]! {
