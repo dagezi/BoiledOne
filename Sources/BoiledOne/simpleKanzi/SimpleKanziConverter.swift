@@ -124,7 +124,7 @@ class SimpleKanziConverter {
     }
 
     func selectKanaAll() {
-        candidateIndex = candidates.count + 1
+        candidateIndex = candidates.count
         consumedLen = source.count
         kataLen = 0
     }
@@ -132,7 +132,7 @@ class SimpleKanziConverter {
     func selectKanaOrShrink() {
         if (doesConvert()) {
             consumedLen = getConsumedLen()
-            candidateIndex = candidates.count + 1
+            candidateIndex = candidates.count
             kataLen = 0
         } else {
             if kataLen == 0 {
