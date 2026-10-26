@@ -72,6 +72,7 @@ class BoiledOneInputController: IMKInputController {
             selectionRange: caretIndex >= 0 ? NSRange(location: caretIndex, length: 0) : .notFound,
             replacementRange: .notFound,
         )
+        syncCandidateWindow()
         return result == .handled
     }
 
@@ -95,8 +96,7 @@ class BoiledOneInputController: IMKInputController {
     }
 
     override func candidates(_ sender: Any!) -> [Any]! {
-        // Return an empty list; no candidate window for now.
-        return []
+        return context.mode.getCandidates()
     }
 
     // ── Menu Items (optional) ──────────────────────────────────────────────
@@ -115,5 +115,18 @@ class BoiledOneInputController: IMKInputController {
 
     @objc private func aboutAction() {
         NSLog("BoiledOne v1.0 — Hello World IME")
+    }
+
+    private func syncCandidateWindow() {
+        guard let window = candidatesWindow else { return }
+        let list = context.mode.getCandidates()
+        let index = context.mode.getSelectedCandidateIndex()
+        if (index >= list.count) {
+            window.hide()
+            return
+        }
+        window.setCandidateData(list)
+        window.selectCandidate(withIdentifier: window.candidateStringIdentifier(list[index]))
+        window.show(kIMKLocateCandidatesBelowHint)
     }
 }

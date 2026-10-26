@@ -22,10 +22,18 @@ class BoiledOneMode {
 
     init() {
         commandMap = []
-    }
+    }    
 
     func getShowString(_ context: BoiledOneContext) -> [(Substring, Int)] {
         return []
+    }
+
+    func getCandidates() -> [String] {
+        return []
+    }
+
+    func getSelectedCandidateIndex() -> Int {
+        return 0
     }
 
     func deactivate(_ context: BoiledOneContext) {

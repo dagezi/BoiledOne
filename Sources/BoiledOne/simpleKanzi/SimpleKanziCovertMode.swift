@@ -46,6 +46,14 @@ class SimpleKanziConvertMode: BoiledOneMode {
     override func deactivate(_ context: BoiledOneContext) {
         _ = simpleKanziFixAllCommand.handler(context)
     }
+
+    override func getCandidates() -> [String] {
+        return converter.candidates.map(\.dest)
+    }
+
+    override func getSelectedCandidateIndex() -> Int {
+        return converter.candidateIndex
+    }
 }
 
 let simpleKanziStartCommand = BoiledOneCommand(

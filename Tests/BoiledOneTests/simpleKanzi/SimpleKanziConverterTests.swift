@@ -18,7 +18,7 @@ struct SimpleKanziConverterTests {
     @Test func constructor_initializeCandidates() {
         let converter = SimpleKanziConverter(dictionary, "かんじ")
 
-        #expect(converter.candidates.map(\.dest) == ["漢字", "感じ", "漢"])
+        #expect(converter.getCandidates() == ["漢字", "感じ", "漢"])
         #expect(converter.getSource() == "かんじ")
         #expect(converter.getSelectedSrc() == "かんじ")
         #expect(converter.getSelectedDest() == "漢字")
